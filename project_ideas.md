@@ -6,7 +6,10 @@ Markus Leippold would be interested in replicating (and extending) https://paper
 
 ### Fraud detection
 
-...
+Data set and descripton provided: https://www.kaggle.com/mlg-ulb/creditcardfraud
+
+### Default of Credit Card Clients
+Data set and description provided: https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset
 
 
 ### Deep calibration
