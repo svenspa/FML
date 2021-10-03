@@ -38,6 +38,7 @@ see:
     https://gist.github.com/jteichma/f0df299304472502462555a438ea29e6
     https://arxiv.org/pdf/2005.02505.pdf
 
+https://mathematicsinindustry.springeropen.com/articles/10.1186/s13362-019-0066-7
 
 ### Deep Simulation
 
