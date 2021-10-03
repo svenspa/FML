@@ -68,3 +68,7 @@ as seen in e.g.,: https://arxiv.org/abs/1911.01700
 RV prediction: https://www.kaggle.com/c/optiver-realized-volatility-prediction
 
 Credit Risk: https://www.kaggle.com/c/home-credit-default-risk/overview
+
+### Portfolio allocation 
+- Using RL: https://link.springer.com/chapter/10.1007/978-3-030-67670-4_32
+- Using NN and VaR: https://ieeexplore.ieee.org/abstract/document/935098?casa_token=6HIKZzL4ClEAAAAA:jwKcQ16Ak-sF7YHVJhALdukXNIR-o-IjkDQ3NG9q6AcjduZtghvdXsWNMeiOOD-vi8D6VSZUquA
