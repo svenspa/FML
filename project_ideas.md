@@ -65,4 +65,6 @@ as seen in e.g.,: https://arxiv.org/abs/1911.01700
 
 ### Kaggle
 
-https://www.kaggle.com/c/optiver-realized-volatility-prediction
+RV prediction: https://www.kaggle.com/c/optiver-realized-volatility-prediction
+
+Credit Risk: https://www.kaggle.com/c/home-credit-default-risk/overview
