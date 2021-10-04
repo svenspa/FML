@@ -38,11 +38,11 @@ see:
     https://gist.github.com/jteichma/f0df299304472502462555a438ea29e6
     https://arxiv.org/pdf/2005.02505.pdf
 
-https://arxiv.org/pdf/1901.09647.pdf
-
 Deep Learning Volatility
 A deep neural network perspective on pricing and calibration in
-(rough) volatility models: https://mathematicsinindustry.springeropen.com/articles/10.1186/s13362-019-0066-7
+(rough) volatility models: https://arxiv.org/pdf/1901.09647.pdfx
+
+https://mathematicsinindustry.springeropen.com/articles/10.1186/s13362-019-0066-7
 
 ### Deep Simulation
 
