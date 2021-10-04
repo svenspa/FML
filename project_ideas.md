@@ -37,6 +37,7 @@ see:
     https://gist.github.com/jteichma/241244299bd43d1fb031527703839712
     https://gist.github.com/jteichma/f0df299304472502462555a438ea29e6
     https://arxiv.org/pdf/2005.02505.pdf
+    https://core.ac.uk/download/pdf/328896513.pdf
 
 https://mathematicsinindustry.springeropen.com/articles/10.1186/s13362-019-0066-7
 
