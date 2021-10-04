@@ -40,7 +40,7 @@ see:
 
 Deep Learning Volatility
 A deep neural network perspective on pricing and calibration in
-(rough) volatility models: https://arxiv.org/pdf/1901.09647.pdfx
+(rough) volatility models: https://arxiv.org/pdf/1901.09647.pdfxhttps://arxiv.org/pdf/1901.09647.pdf
 
 https://mathematicsinindustry.springeropen.com/articles/10.1186/s13362-019-0066-7
 
