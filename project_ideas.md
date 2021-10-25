@@ -1,9 +1,5 @@
 ## Potential topics
 
-### Predicting returns
-
-Markus Leippold would be interested in replicating (and extending) https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3756587
-
 ### Fraud detection
 
 Data set and descripton provided: https://www.kaggle.com/mlg-ulb/creditcardfraud
