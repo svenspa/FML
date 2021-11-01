@@ -1,0 +1,2 @@
+check if autograd really works when 
+passing the increments of the stock price again
