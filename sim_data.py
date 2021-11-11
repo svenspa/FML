@@ -19,10 +19,6 @@ class SimulationData(Dataset):
         self.x = self.x.reshape(self.x.shape[0], self.x.shape[1], 1)
         self.x = torch.from_numpy(self.x).float()
 
-        # Slicing off last price
-        self.x_train = self.x[:, :-1]
-        self.x_inc = self.x.squeeze().diff()
-
         self.payoffs = payoff(self.x, **payoff_params)
 
         self.price = pricer(**price_params)
