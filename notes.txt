@@ -1,2 +1,11 @@
-check if autograd really works when 
-passing the increments of the stock price again
+- network sometimes gives negative position in underlying
+    -> can this ever make sense? / quick fix would be ReLU in final layer
+
+- in training: could use true price or bs price
+    is bs price is correct; should get market price back from implied vola?!
+    check how optionmetrics calculates this
+
+- Or go back to also learning the price
+    this could make sense: It is essentially the starting capital in the hedge portfolio
+
+- Do normalization
