@@ -24,14 +24,16 @@ def bs_delta(
     sigma: float,
     rf: float,
     strike: float,
-    delta_t: float = 1 / 252,
+    delta_t: float = 1.0,
 ):
+
+    sigma = sigma / (252**0.5)
 
     T = n_steps * delta_t
     d1 = (np.log(initial_value / strike) + (rf + (sigma ** 2) / 2) * T) / (
         sigma * np.sqrt(T)
     )
-    return d1
+    return norm.cdf(d1)
 
 
 def bs_generator(
