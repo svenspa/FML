@@ -39,11 +39,12 @@ def bs_generator(
     n_steps: int,
     initial_value: float,
     sigma: float,
-    delta_t: float = 1 / 252,
+    delta_t: float = 1.0,
     seed: int = 100,
 ):
     """Simulate in the BS model under the risk-neutral measure."""
 
+    sigma = sigma / (252**0.5)
     np.random.seed(seed)
 
     bm_increments = np.random.normal(scale=delta_t, size=(n_simulations, n_steps))
