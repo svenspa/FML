@@ -16,7 +16,10 @@ def train(dataloader, model, criterion, optimizer, epochs, writer):
                 tepoch.set_description(f"Epoch {epoch}")
 
                 optimizer.zero_grad()
-                output = model(x)
+                if not model.learn_price:
+                    output = model(x)
+                else:
+                    output, price = model(x)
                 si = stochastic_integral(x_inc, output)
                 loss = criterion(price + si, payoff)
 
@@ -36,7 +39,11 @@ def test(data_loader, model, criterion):
     model.eval()
     l = len(data_loader.dataset)
     x, x_inc, payoff, price = data_loader.dataset[:l]
-    output = model(x)
+    if not model.learn_price:
+        output = model(x)
+    else:
+        output, price = model(x)
     si = stochastic_integral(x_inc, output)
     loss = criterion(price + si, payoff)
-    return output, loss
+
+    return output, price, loss
