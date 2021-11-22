@@ -4,7 +4,7 @@ from tqdm import tqdm
 from utils import stochastic_integral
 
 
-def train(dataloader, model, criterion, optimizer, epochs, writer):
+def train(dataloader, model, criterion, optimizer, epochs, writer, scheduler=None):
     len_data = len(dataloader.dataset)
     model.train()
     for epoch in range(epochs):
@@ -28,6 +28,9 @@ def train(dataloader, model, criterion, optimizer, epochs, writer):
 
                 tepoch.set_postfix(loss=loss.item())
                 running_loss += loss.item()
+        
+        if scheduler is not None:
+            scheduler.step()
 
         writer.add_scalar(
             "Average Loss in Epoch", running_loss / len_data, epoch * len_data
@@ -37,8 +40,7 @@ def train(dataloader, model, criterion, optimizer, epochs, writer):
 
 def test(data_loader, model, criterion):
     model.eval()
-    l = len(data_loader.dataset)
-    x, x_inc, payoff, price = data_loader.dataset[:l]
+    x, x_inc, payoff, price = data_loader.dataset[:]
     if not model.learn_price:
         output = model(x)
     else:
