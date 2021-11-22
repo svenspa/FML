@@ -8,7 +8,7 @@ def bs_call_price(
     sigma: float,
     rf: float,
     strike: float,
-    delta_t: float = 1 / 252,
+    delta_t: float = 1 / 365,
 ):
     T = n_steps * delta_t
     d1 = (np.log(initial_value / strike) + (rf + (sigma ** 2) / 2) * T) / (
