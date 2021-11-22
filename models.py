@@ -72,3 +72,9 @@ class ControlNet(nn.Module):
                 return out, self.price_net(x[:, 0])
             else:
                 return F.relu(out), self.price_net(x[:, 0])
+
+    def eval_mode(self):
+        for net in self.nets:
+            net.eval()
+        if self.learn_price:
+            self.price_net.eval()

@@ -39,7 +39,8 @@ def train(dataloader, model, criterion, optimizer, epochs, writer, scheduler=Non
 
 
 def test(data_loader, model, criterion):
-    model.eval()
+    model.eval_mode()
+
     x, x_inc, payoff, price = data_loader.dataset[:]
     if not model.learn_price:
         output = model(x)
