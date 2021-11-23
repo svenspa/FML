@@ -2,7 +2,6 @@ from typing import List
 import pandas as pd
 import yfinance as yf
 
-
 def get_option_data(
     df: pd.DataFrame,
     option_ids: List[str],
@@ -24,12 +23,12 @@ def get_option_data(
         )
 
         underlying_df = ticker.history(
-            start=option_df.loc[:, "date"].iloc[0],
-            end=option_df.loc[:, "date"].iloc[-1],
+            start=option_df.loc[:, "date"].iloc[0] + pd.Timedelta('1 days'),
+            end=option_df.loc[:, "date"].iloc[-1] + pd.Timedelta('1 days'),
         )
 
         assert option_df.shape[0] == underlying_df.shape[0]
-        option_df = option_df.assign(S=underlying_df.loc[:, "Close"].values)
+        option_df = pd.merge(option_df,underlying_df[['Close']],left_on='date', right_index=True)
 
         d[option_id] = option_df
 
