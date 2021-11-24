@@ -40,9 +40,9 @@ def get_option_data(
 
     return d
 
-def remove_until_first_nonzero(data, columnName):
+def remove_until_first_nonzero(data, columnName, minV):
     data.loc[:,'indicator'] = 0
-    data.loc[data[columnName]>10,'indicator'] = 1
+    data.loc[data[columnName]>minV,'indicator'] = 1
     data['indicator'] = data.sort_values(by='date').groupby('optionid').indicator.cumsum()
     data = data[data['indicator'] > 0]
     return data.drop(columns='indicator')
@@ -57,11 +57,11 @@ def get_within_date(data, start, end):
     return data[data['optionid'].isin(optionids)]
 
 
-def get_best_options(data):
-    data = get_within_date(data, pd.to_datetime('2018-01-01'), pd.to_datetime('2019-01-01'))
-    data = remove_until_first_nonzero(data, 'volume')
+def get_best_options(data, start, end , minN, minV):
+    data = get_within_date(data, start, end)
+    data = remove_until_first_nonzero(data, 'volume', minV)
     data = data[data['cp_flag'] == 'C']
-    data = min_n_days(data, 100)
+    data = min_n_days(data, minN)
 
     return data, (data[data['volume'] == 0].groupby('optionid').volume.count().sort_index() / data.groupby(
         'optionid').volume.count().sort_index()).sort_values()
