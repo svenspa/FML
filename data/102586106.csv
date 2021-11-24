@@ -1,4 +1,4 @@
-,secid,date,exdate,last_date,cp_flag,strike_price,best_bid,best_offer,volume,impl_volatility,optionid,forward_price,index_flag,issuer,exercise_style,Close
+,secid,date,exdate,last_date,cp_flag,strike_price,best_bid,best_offer,volume,impl_volatility,optionid,forward_price,index_flag,issuer,exercise_style,S
 1580744,112878,2014-01-23,20140517,20140123.0,C,820000,13.8,16.3,1,0.11646,102586106,,1,CBOE S&P 100 INDEX,E,812.1300048828125
 1582036,112878,2014-01-24,20140517,20140123.0,C,820000,10.7,12.3,0,0.130208,102586106,,1,CBOE S&P 100 INDEX,E,796.280029296875
 1583242,112878,2014-01-27,20140517,20140127.0,C,820000,8.6,10.8,1,0.127482,102586106,,1,CBOE S&P 100 INDEX,E,792.510009765625
