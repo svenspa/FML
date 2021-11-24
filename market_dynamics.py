@@ -24,10 +24,8 @@ def bs_delta(
     sigma: float,
     rf: float,
     strike: float,
-    delta_t: float = 1.0,
+    delta_t: float = 1 / 365,
 ):
-
-    sigma = sigma / (252**0.5)
 
     T = n_steps * delta_t
     d1 = (np.log(initial_value / strike) + (rf + (sigma ** 2) / 2) * T) / (
@@ -41,18 +39,18 @@ def bs_generator(
     n_steps: int,
     initial_value: float,
     sigma: float,
-    delta_t: float = 1.0,
+    delta_t: float = 1 / 252,
     seed: int = 0,  # set non-zero seed to fix a seed
 ):
     """Simulate in the BS model under the risk-neutral measure."""
 
-    sigma = sigma / (252**0.5)
+    scale = delta_t ** 0.5
 
     if seed != 0:
         np.random.seed(seed)
 
-    bm_increments = np.random.normal(scale=delta_t, size=(n_simulations, n_steps))
-    increments = sigma * bm_increments - 0.5 * (sigma ** 2) * delta_t
+    bm_increments = np.random.normal(scale=sigma * scale, size=(n_simulations, n_steps))
+    increments = bm_increments - 0.5 * (sigma ** 2) * delta_t
     increments = np.insert(
         increments, 0, np.log([initial_value] * n_simulations), axis=1
     )
