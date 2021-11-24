@@ -2,6 +2,7 @@ from typing import List
 import pandas as pd
 import numpy as np
 import yfinance as yf
+import warnings
 
 
 def get_option_data(
@@ -29,7 +30,12 @@ def get_option_data(
             end=option_df.loc[:, "date"].iloc[-1] + pd.Timedelta("1 days"),
         )
 
-        assert option_df.shape[0] == underlying_df.shape[0]
+        if option_df.shape[0] != underlying_df.shape[0]:
+            warnings.warn(
+                f"option_df and underlying_df do not match. \n The shapes are {option_df.shape=} and {underlying_df.shape=}"
+            )
+            continue
+
         option_df = pd.merge(
             option_df, underlying_df[["Close"]], left_on="date", right_index=True
         )
