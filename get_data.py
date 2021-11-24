@@ -29,6 +29,7 @@ def get_option_data(
 
         assert option_df.shape[0] == underlying_df.shape[0]
         option_df = pd.merge(option_df,underlying_df[['Close']],left_on='date', right_index=True)
+        option_df = option_df.rename(columns={"Close":"S"})
 
         d[option_id] = option_df
 
