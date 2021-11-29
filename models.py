@@ -57,7 +57,7 @@ class ControlNet(nn.Module):
 
     def forward(self, x):
         print(x)
-        print(self.nets[0])
+        print(self.nets[0].device())
         for i in range(len(self.nets)):
             hedge = self.nets[i](x[:, i])
             if i == 0:
