@@ -60,8 +60,8 @@ def remove_until_first_nonzero(data, columnName, minV):
     return data.drop(columns="indicator")
 
 
-def min_n_days(data, n):
-    keep = data.groupby("optionid").volume.count() >= n
+def min_n_days(data, nMIN, nMAX):
+    keep = (data.groupby("optionid").volume.count() >= nMIN) & (data.groupby("optionid").volume.count() <= nMAX)
     return data[data.optionid.isin(keep[keep == True].index)]
 
 
@@ -75,12 +75,11 @@ def get_within_date(data, start, end):
     )
     return data[data["optionid"].isin(optionids)]
 
-
-def get_best_options(data, start, end, minN, minV):
+def get_best_options(data, start, end, nMIN, nMAX, minV):
     data = get_within_date(data, start, end)
     data = remove_until_first_nonzero(data, "volume", minV)
     data = data[data["cp_flag"] == "C"]
-    data = min_n_days(data, minN)
+    data = min_n_days(data, nMIN, nMAX)
 
     return (
         data,
