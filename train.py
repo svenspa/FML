@@ -4,7 +4,16 @@ from tqdm import tqdm
 from utils import stochastic_integral
 
 
-def train(dataloader, model, criterion, optimizer, epochs, writer, scheduler=None):
+def train(
+    dataloader,
+    model,
+    criterion,
+    optimizer,
+    epochs,
+    writer,
+    scheduler=None,
+    device="cpu",
+):
     len_data = len(dataloader.dataset)
     model.train()
     for epoch in range(epochs):
@@ -14,6 +23,13 @@ def train(dataloader, model, criterion, optimizer, epochs, writer, scheduler=Non
         with tqdm(enumerate(dataloader), unit="batch") as tepoch:
             for i, (x, x_inc, payoff, price) in tepoch:
                 tepoch.set_description(f"Epoch {epoch}")
+
+                x, x_inc, payoff, price = (
+                    x.to(device),
+                    x_inc.to(device),
+                    payoff.to(device),
+                    price.to(device),
+                )
 
                 optimizer.zero_grad()
                 if not model.learn_price:
@@ -28,7 +44,7 @@ def train(dataloader, model, criterion, optimizer, epochs, writer, scheduler=Non
 
                 tepoch.set_postfix(loss=loss.item())
                 running_loss += loss.item()
-        
+
         if scheduler is not None:
             scheduler.step()
 
@@ -38,10 +54,17 @@ def train(dataloader, model, criterion, optimizer, epochs, writer, scheduler=Non
         writer.close()
 
 
-def test(data_loader, model, criterion):
+def test(data_loader, model, criterion, device="cpu"):
     model.eval_mode()
 
     x, x_inc, payoff, price = data_loader.dataset[:]
+    x, x_inc, payoff, price = (
+        x.to(device),
+        x_inc.to(device),
+        payoff.to(device),
+        price.to(device),
+    )
+
     if not model.learn_price:
         output = model(x)
     else:
