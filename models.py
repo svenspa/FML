@@ -42,7 +42,7 @@ class ControlNet(nn.Module):
         super().__init__()
 
         self.learn_price = learn_price
-        self.nets = []
+        self.nets = nn.ModuleList()
         self.model_params = nn.ParameterList()
         for i in np.arange(n_steps):
             fnn = FNN(input_dim, fc_dims, output_dim)
@@ -78,3 +78,8 @@ class ControlNet(nn.Module):
             net.eval()
         if self.learn_price:
             self.price_net.eval()
+
+    def bn_to(self, device):
+        for net in self.nets:
+            net.model[0].running_mean = net.model[0].running_mean.to(device)
+            net.model[0].running_var = net.model[0].running_var.to(device)
