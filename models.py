@@ -42,7 +42,7 @@ class ControlNet(nn.Module):
         super().__init__()
 
         self.learn_price = learn_price
-        self.nets = []
+        self.nets = nn.ModuleList()
         self.model_params = nn.ParameterList()
         for i in np.arange(n_steps):
             fnn = FNN(input_dim, fc_dims, output_dim)
