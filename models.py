@@ -56,8 +56,6 @@ class ControlNet(nn.Module):
                 self.model_params.append(p)
 
     def forward(self, x):
-        print(x)
-        print(self.nets[0].parameters())
         for i in range(len(self.nets)):
             hedge = self.nets[i](x[:, i])
             if i == 0:
@@ -80,3 +78,8 @@ class ControlNet(nn.Module):
             net.eval()
         if self.learn_price:
             self.price_net.eval()
+
+    def bn_to(self, device):
+        for net in self.nets:
+            net.model[0].running_mean = net.model[0].running_mean.to(device)
+            net.model[0].running_var = net.model[0].running_var.to(device)
