@@ -13,8 +13,9 @@ def train(
     writer,
     scheduler=None,
     device="cpu",
+    metric=None,
 ):
-    len_data = len(dataloader.dataset)
+    num_batches = len(dataloader.dataset) / dataloader.batch_size
     model.train()
     for epoch in range(epochs):
 
@@ -37,19 +38,28 @@ def train(
                 else:
                     output, price = model(x)
                 si = stochastic_integral(x_inc, output)
-                loss = criterion(price + si, payoff)
+                loss = criterion((price + si).float(), payoff.float())
 
                 loss.backward()
                 optimizer.step()
 
-                tepoch.set_postfix(loss=loss.item())
+                if metric is not None:
+                    tepoch.set_postfix(
+                        {
+                            "loss": loss.item(),
+                            "metric": metric(price + si, payoff).item(),
+                        }
+                    )
+                else:
+                    tepoch.set_postfix(loss=loss.item())
+
                 running_loss += loss.item()
 
         if scheduler is not None:
             scheduler.step()
 
         writer.add_scalar(
-            "Average Loss in Epoch", running_loss / len_data, epoch * len_data
+            "Average Loss in Epoch", running_loss / num_batches, epoch * num_batches
         )
         writer.close()
 
