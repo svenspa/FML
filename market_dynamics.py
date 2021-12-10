@@ -58,6 +58,7 @@ def bs_generator(
     )
     return np.exp(np.cumsum(increments, axis=1))
 
+
 def garch_generator(
     n_simulations: int,
     n_steps: int,
@@ -71,8 +72,11 @@ def garch_generator(
 ):
     sim_model = arch_model(None, p=p, o=o, q=q, dist=dist)
 
-    def func(x): #Somehow this function needs an argument
-        return initial_value * np.cumprod(1 + sim_model.simulate(params, n_steps).data.values / scale)
+    def func(x):  # Somehow this function needs an argument
+        return initial_value * np.cumprod(
+            1 + sim_model.simulate(params, n_steps).data.values / scale
+        )
+
     res_ = []
     with mp.Pool(4) as pool:
         res_ = pool.map(func, range(n_simulations))

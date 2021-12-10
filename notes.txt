@@ -1,6 +1,0 @@
-- network sometimes gives negative position in underlying
-    -> can this ever make sense? / quick fix would be ReLU in final layer
-    -> seemed to screw things up; but try again now
-
-- Currently training under Q dynamics
-    -> Does this make sense when we want to use the network for real data?
