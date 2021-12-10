@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 from typing import Callable
-import pandas as pd
+import numpy as np import pandas as pd
 import dask.dataframe as dd
 
 
@@ -65,9 +65,9 @@ class DataFromFile(Dataset):
         self.data_len = data_len
 
         # splitting the data into one file for each batch
-        splits = int(np.floor(data_len / batch_size))
+        self.splits = int(np.floor(data_len / batch_size))
         ddf = dd.read_parquet(file_path)
-        ddf.repartition(splits).to_parquet(folder_path)
+        ddf.repartition(self.splits).to_parquet(folder_path)
 
     def __len__(self):
         return self.dat_len
