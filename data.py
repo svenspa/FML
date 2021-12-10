@@ -57,6 +57,7 @@ class DataFromFile(Dataset):
         price: float,
         payoff: Callable,
         payoff_params: dict,
+        take_log: bool = False,
     ):
 
         self.folder_path = folder_path
@@ -64,6 +65,7 @@ class DataFromFile(Dataset):
         self.payoff = payoff
         self.payoff_params = payoff_params
         self.data_len = data_len
+        self.take_log = take_log
 
         # splitting the data into one file for each batch
         self.splits = int(np.floor(data_len / batch_size))
@@ -78,9 +80,17 @@ class DataFromFile(Dataset):
         x = pd.read_parquet(f"{self.folder_path}part.{idx}.parquet").values
         x = x.reshape(x.shape[0], x.shape[1], 1)
         x = torch.from_numpy(x).float()
-        return (
-            x[:, :-1],
-            x.squeeze().diff(),
-            self.payoff(x, **self.payoff_params),
-            self.price * torch.ones(x.shape[0]),
-        )
+        if not self.take_log:
+            return (
+                x[:, :-1],
+                x.squeeze().diff(),
+                self.payoff(x, **self.payoff_params),
+                self.price * torch.ones(x.shape[0]),
+            )
+        else:
+            return (
+                torch.log(x[:, :-1]),
+                x.squeeze().diff(),
+                self.payoff(x, **self.payoff_params),
+                self.price * torch.ones(x.shape[0]),
+            )
