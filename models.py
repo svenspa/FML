@@ -22,6 +22,7 @@ class FNN(nn.Module):
                 ]
             else:
                 layers.append(nn.Linear(fc_dims[i - 1], fc_dim))
+                layers.append(nn.BatchNorm1d(fc_dim))
                 layers.append(nn.ReLU())
         layers.append(nn.Linear(fc_dims[-1], output_dim))
         self.model = nn.Sequential(*layers)
