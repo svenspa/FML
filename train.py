@@ -1,3 +1,4 @@
+import sys
 import torch
 from torch.utils import data
 from tqdm import tqdm
@@ -147,3 +148,95 @@ def train_dataset(
         )
 
         writer.close()
+
+
+def train_val(
+    dataset,
+    model,
+    criterion,
+    optimizer,
+    epochs,
+    indices,
+    val_indices,
+    scheduler=None,
+    metric=None,
+    val_every=1,
+    max_norm=10,
+):
+
+    losses, metrics, val_losses = [], [], []
+
+    for epoch in range(epochs):
+
+        model.train()
+        running_loss = 0
+        running_metric = 0
+
+        with tqdm(indices, unit="batch") as tepoch:
+            for i in tepoch:
+                tepoch.set_description(f"Epoch {epoch}")
+
+                x, x_inc, payoff, price = dataset[i]
+
+                if x is None:  # None means that there are strange paths in the batch
+                    continue
+
+                optimizer.zero_grad()
+
+                if not model.learn_price:
+                    output = model(x)
+                else:
+                    output, price = model(x)
+
+                # Debugging
+                if output.isnan().sum() > 0:
+                    print(f"nan loss occured with file {i}")
+                    sys.exit()
+
+                si = stochastic_integral(x_inc, output)
+                loss = criterion((price.squeeze() + si).float(), payoff.float())
+
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=max_norm)
+                optimizer.step()
+
+                met = metric(price + si, payoff).item()
+                running_metric += met
+                running_loss += loss.item()
+
+                if metric is not None:
+                    tepoch.set_postfix(
+                        {
+                            "loss": loss.item(),
+                            "metric": met,
+                        }
+                    )
+                else:
+                    tepoch.set_postfix(loss=loss.item())
+
+        if scheduler is not None:
+            scheduler.step()
+
+        losses.append(running_loss / len(indices))
+        metrics.append(running_metric / len(indices))
+
+        if epoch % val_every == 0:
+            model.eval()
+            running_val_loss = 0
+            for i in val_indices:
+                x, x_inc, payoff, price = dataset[i]
+
+                if not model.learn_price:
+                    output = model(x)
+                else:
+                    output, price = model(x)
+
+                si = stochastic_integral(x_inc, output)
+                vl = criterion((price.squeeze() + si).float(), payoff.float()).item()
+                running_val_loss += vl
+
+            total_val_loss = running_val_loss / len(val_indices)
+            val_losses.append(total_val_loss)
+            print(f"validation loss: {total_val_loss}")
+
+    return losses, val_losses, metrics

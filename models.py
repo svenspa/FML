@@ -84,3 +84,30 @@ class ControlNet(nn.Module):
         for net in self.nets:
             net.model[0].running_mean = net.model[0].running_mean.to(device)
             net.model[0].running_var = net.model[0].running_var.to(device)
+
+
+def average_outputs(weights, model_outputs):
+    for i, (w, o) in enumerate(zip(weights, model_outputs)):
+        if i == 0:
+            res = w * o
+        else:
+            res += w * o
+    return res
+
+
+class EnsembleNet(torch.nn.Module):
+    def __init__(self, models, weights=None):
+        super().__init__()
+
+        self.models = models
+
+        if weights is None:
+            self.weights = torch.ones(len(models)) * (1 / len(models))
+        else:
+            self.weights = weights
+
+        self.learn_price = False  # not implemented yet
+
+    def forward(self, x):
+        model_outputs = [model(x) for model in self.models]
+        return average_outputs(self.weights, model_outputs)
