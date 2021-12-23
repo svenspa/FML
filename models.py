@@ -16,7 +16,7 @@ class FNN(nn.Module):
         for i, fc_dim in enumerate(fc_dims):
             if i == 0:
                 layers = [
-                    nn.BatchNorm1d(1),
+                    nn.BatchNorm1d(2),
                     nn.Linear(input_dim, fc_dims[0]),
                     nn.ReLU(),
                 ]
@@ -56,9 +56,9 @@ class ControlNet(nn.Module):
             for p in self.price_net.parameters():
                 self.model_params.append(p)
 
-    def forward(self, x):
+    def forward(self, x, x1):
         for i in range(len(self.nets)):
-            hedge = self.nets[i](x[:, i])
+            hedge = self.nets[i](torch.cat((x[:, i], x1[:, i]), 1))
             if i == 0:
                 out = hedge
             else:
@@ -108,6 +108,6 @@ class EnsembleNet(torch.nn.Module):
 
         self.learn_price = False  # not implemented yet
 
-    def forward(self, x):
-        model_outputs = [model(x) for model in self.models]
+    def forward(self, x, x1):
+        model_outputs = [model(x, x1) for model in self.models]
         return average_outputs(self.weights, model_outputs)

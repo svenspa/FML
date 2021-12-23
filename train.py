@@ -176,7 +176,7 @@ def train_val(
             for i in tepoch:
                 tepoch.set_description(f"Epoch {epoch}")
 
-                x, x_inc, payoff, price = dataset[i]
+                x, vol, x_inc, payoff, price = dataset[i]
 
                 if x is None:  # None means that there are strange paths in the batch
                     continue
@@ -184,9 +184,9 @@ def train_val(
                 optimizer.zero_grad()
 
                 if not model.learn_price:
-                    output = model(x)
+                    output = model(x, vol)
                 else:
-                    output, price = model(x)
+                    output, price = model(x, vol)
 
                 # Debugging
                 if output.isnan().sum() > 0:
@@ -224,12 +224,12 @@ def train_val(
             model.eval()
             running_val_loss = 0
             for i in val_indices:
-                x, x_inc, payoff, price = dataset[i]
+                x, vol, x_inc, payoff, price = dataset[i]
 
                 if not model.learn_price:
-                    output = model(x)
+                    output = model(x, vol)
                 else:
-                    output, price = model(x)
+                    output, price = model(x, vol)
 
                 si = stochastic_integral(x_inc, output)
                 vl = criterion((price.squeeze() + si).float(), payoff.float()).item()

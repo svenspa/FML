@@ -142,9 +142,19 @@ class DataFromFolder(Dataset):
             print(f"data problem with {idx}")
             return None, None, None, None
 
+        def get_vol(self, idx):
+            vol = pd.read_parquet(f"{self.folder_path}gjrpath_sig{idx}.parquet")
+            vol = vol.T / 100
+            vol = vol * SQRT_252
+            vol.insert(loc=0, column="initvalue", value=self.sigma_0)
+            vol = vol.values
+            vol = vol.reshape(vol.shape[0], vol.shape[1], 1)
+            return torch.from_numpy(vol).float()[:, :-1]
+        
         if not self.take_log:
             return (
                 x[:, :-1],
+                get_vol(self, idx),
                 x.squeeze().diff(),
                 self.payoff(x, **self.payoff_params),
                 self.price * torch.ones(x.shape[0]),
@@ -152,6 +162,7 @@ class DataFromFolder(Dataset):
         else:
             return (
                 torch.log(x[:, :-1]),
+                get_vol(self, idx),
                 x.squeeze().diff(),
                 self.payoff(x, **self.payoff_params),
                 self.price * torch.ones(x.shape[0]),
