@@ -23,11 +23,12 @@ def train(
         running_loss = 0
 
         with tqdm(enumerate(dataloader), unit="batch") as tepoch:
-            for i, (x, x_inc, payoff, price) in tepoch:
+            for i, (x, vol, x_inc, payoff, price) in tepoch:
                 tepoch.set_description(f"Epoch {epoch}")
 
-                x, x_inc, payoff, price = (
+                x, vol, x_inc, payoff, price = (
                     x.to(device),
+                    vol.to(device),
                     x_inc.to(device),
                     payoff.to(device),
                     price.to(device),
@@ -35,9 +36,9 @@ def train(
 
                 optimizer.zero_grad()
                 if not model.learn_price:
-                    output = model(x)
+                    output = model(x, vol)
                 else:
-                    output, price = model(x)
+                    output, price = model(x, vol)
                 si = stochastic_integral(x_inc, output)
                 loss = criterion((price + si).float(), payoff.float())
 
@@ -68,18 +69,19 @@ def train(
 def test(data_loader, model, criterion, device="cpu"):
     model.eval_mode()
 
-    x, x_inc, payoff, price = data_loader.dataset[:]
-    x, x_inc, payoff, price = (
+    x, vol, x_inc, payoff, price = data_loader.dataset[:]
+    x, vol, x_inc, payoff, price = (
         x.to(device),
+        vol.to(device),
         x_inc.to(device),
         payoff.to(device),
         price.to(device),
     )
 
     if not model.learn_price:
-        output = model(x)
+        output = model(x, vol)
     else:
-        output, price = model(x)
+        output, price = model(x, vol)
     si = stochastic_integral(x_inc, output)
     loss = criterion(price + si, payoff)
 
@@ -107,9 +109,10 @@ def train_dataset(
             for i in tepoch:
                 tepoch.set_description(f"Epoch {epoch}")
 
-                x, x_inc, payoff, price = dataset[i]
-                x, x_inc, payoff, price = (
+                x, vol, x_inc, payoff, price = dataset[i]
+                x, vol, x_inc, payoff, price = (
                     x.to(device),
+                    vol.to(device),
                     x_inc.to(device),
                     payoff.to(device),
                     price.to(device),
@@ -117,9 +120,9 @@ def train_dataset(
 
                 optimizer.zero_grad()
                 if not model.learn_price:
-                    output = model(x)
+                    output = model(x, vol)
                 else:
-                    output, price = model(x)
+                    output, price = model(x, vol)
                 si = stochastic_integral(x_inc, output)
                 loss = criterion((price + si).float(), payoff.float())
 

@@ -16,7 +16,7 @@ class FNN(nn.Module):
         for i, fc_dim in enumerate(fc_dims):
             if i == 0:
                 layers = [
-                    nn.BatchNorm1d(2),
+                    nn.BatchNorm1d(input_dim),
                     nn.Linear(input_dim, fc_dims[0]),
                     nn.ReLU(),
                 ]
@@ -39,10 +39,12 @@ class ControlNet(nn.Module):
         fc_dims: list,
         output_dim: int,
         learn_price: bool = False,
+        learn_vol: bool = False,
     ) -> None:
         super().__init__()
 
         self.learn_price = learn_price
+        self.learn_vol = learn_vol
         self.nets = nn.ModuleList()
         self.model_params = nn.ParameterList()
         for i in np.arange(n_steps):
@@ -58,7 +60,10 @@ class ControlNet(nn.Module):
 
     def forward(self, x, x1):
         for i in range(len(self.nets)):
-            hedge = self.nets[i](torch.cat((x[:, i], x1[:, i]), 1))
+            if self.learn_vol:
+                hedge = self.nets[i](torch.cat((x[:, i], x1[:, i]), 1))
+            else:
+                hedge = self.nets[i](x[:, i])
             if i == 0:
                 out = hedge
             else:
