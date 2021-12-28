@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.stats import norm
+from arch import arch_model
+import multiprocess as mp
 
 
 def bs_call_price(
@@ -55,3 +57,29 @@ def bs_generator(
         increments, 0, np.log([initial_value] * n_simulations), axis=1
     )
     return np.exp(np.cumsum(increments, axis=1))
+
+
+def garch_generator(
+    n_simulations: int,
+    n_steps: int,
+    initial_value: int,
+    params: np.array,
+    p: int = 1,
+    o: int = 1,
+    q: int = 1,
+    dist: str = "t",
+    scale: int = 100,
+):
+    sim_model = arch_model(None, p=p, o=o, q=q, dist=dist)
+
+    def func(x):  # Somehow this function needs an argument
+        return initial_value * np.cumprod(
+            1 + sim_model.simulate(params, n_steps).data.values / scale
+        )
+
+    res_ = []
+    with mp.Pool(4) as pool:
+        res_ = pool.map(func, range(n_simulations))
+
+    increments = np.array(res_)
+    return np.insert(increments, 0, [initial_value] * n_simulations, axis=1)
