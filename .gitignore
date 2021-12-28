@@ -131,3 +131,7 @@ dmypy.json
 *.csv
 
 /experiments
+/v1
+/v2
+/resssim
+/batch_files
