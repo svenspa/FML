@@ -101,7 +101,7 @@ def average_outputs(weights, model_outputs):
 
 
 class EnsembleNet(torch.nn.Module):
-    def __init__(self, models, weights=None):
+    def __init__(self, models, learn_vol=False, weights=None):
         super().__init__()
 
         self.models = models
@@ -111,8 +111,12 @@ class EnsembleNet(torch.nn.Module):
         else:
             self.weights = weights
 
+        self.learn_vol = learn_vol
         self.learn_price = False  # not implemented yet
 
-    def forward(self, x, x1):
-        model_outputs = [model(x, x1) for model in self.models]
+    def forward(self, x, x1=None):
+        if self.learn_vol:
+            model_outputs = [model(x, x1) for model in self.models]
+        else:
+            model_outputs = [model(x) for model in self.models]
         return average_outputs(self.weights, model_outputs)
