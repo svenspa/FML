@@ -58,7 +58,7 @@ class ControlNet(nn.Module):
             for p in self.price_net.parameters():
                 self.model_params.append(p)
 
-    def forward(self, x, x1):
+    def forward(self, x, x1=None):
         for i in range(len(self.nets)):
             if self.learn_vol:
                 hedge = self.nets[i](torch.cat((x[:, i], x1[:, i]), 1))
