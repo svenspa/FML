@@ -8,8 +8,9 @@ within the deep hedging framework.
 The main results can be seen in the following jupyter notebooks:
 - gjr-model.ipynb
   -  here we train a deep hedging network on GJR-GARCH paths and evaluate it on simulated and real paths
+
 -  res-model.ipynb
-  -  here we train a deep hedging network on RC paths and evaluate it on simulated and real paths
+   - here we train a deep hedging network on RC paths and evaluate it on simulated and real paths
 
 The notebook compare-sim-paths.ipynb includes the illustrations of the simulated paths shown in the report.
 
