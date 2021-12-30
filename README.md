@@ -11,7 +11,9 @@ The main results can be seen in the following jupyter notebooks:
   -  here we train a deep hedging network on RC paths and evaluate it on simulated and real paths
 
 The notebook compare-sim-paths.ipynb includes the illustrations of the simulated paths shown in the report.
+
 The notebook reservoir-simulation.ipynb generates the RC paths.
+
 The GJRGARCH_ESTIMATION.R file generates the GJR-GARCH paths.
 
 The generated data can be found here: https://www.kaggle.com/konmue/gjr-vol
