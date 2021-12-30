@@ -1,4 +1,5 @@
 # Finance and Machine Learning
+
 ## Market simulation for Deep Hedging
 
 Repository for our course project where we compare simulation techniques
