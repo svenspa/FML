@@ -5,8 +5,8 @@ options("getSymbols.warning4.0"=FALSE)
 options("getSymbols.yahoo.warning"=FALSE)
 # Downloading SP500 price using quantmod
 
-getSymbols("^GSPC", from = '2013-03-04',
-           to = "2018-01-02",warnings = FALSE,
+getSymbols("^GSPC", from = '2007-06-11',
+           to = "2012-04-10",warnings = FALSE,
            auto.assign = TRUE)
 
 GSPC <- GSPC[,'GSPC.Close']
@@ -21,12 +21,12 @@ spec.gjrGARCH = ugarchspec(variance.model=list(model="gjrGARCH", garchOrder=c(1,
 gjrGARCH <- ugarchfit(logr*100, spec=spec.gjrGARCH)
 gjrGARCH
 
-fixed.p <- list(mu = 0.3374, # our mu (intercept)
-                omega = 0.029968, # our alpha_0 (intercept)
-                alpha1 = 0.000000 , # our alpha_1 (GARCH(1) parameter of sigma_t^2)
-                beta1 = 0.776090, # our beta_1 (GARCH(1) parameter of sigma_t^2)
-                gamma1 = 0.379722,
-                shape = 5.582693)
+fixed.p <- list(mu = 0.056105, 
+                omega = 0.023003, 
+                alpha1 = 0.000000 , 
+                beta1 = 0.895905, 
+                gamma1 = 0.183166,
+                shape = 6.930399)
 spec.gjrGARCH = ugarchspec(variance.model=list(model="gjrGARCH", garchOrder=c(1,1)), mean.model=list(armaOrder=c(0,0), include.mean=TRUE),fixed.pars = fixed.p, distribution.model="std")
 X <- ugarchpath(spec.gjrGARCH,
                 n.sim = 50, # simulated path length
